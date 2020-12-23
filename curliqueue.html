@@ -1,0 +1,49 @@
+<style>
+  .div-container {
+    background-color: #91B2FF;
+    max-width: 600px;
+    border-radius: 5px;
+    padding: 15px;
+  }
+  .result-container {
+    background-color: #91B2FF;
+    padding: 15px;
+    border-radius: 5px;
+    max-width: 600px;
+    word-break: break-all;
+    font-family: monospace;
+  }
+  .textbox {
+    width: 59%;
+    padding: 5px;
+  }
+  .textarea {
+    width: 90%;
+    padding: 5px;
+  }
+</style>
+
+<div class=".div-container">
+    <p>Result:</p>
+    <p><textarea cols=40 rows=8 id="show" onClick='selectText(this);'></textarea></p>
+</div>
+
+    <script>
+    function ShowText(){
+        // find each input field inside the 'myForm' form:
+        var inputs = myForm.querySelectorAll('input,select');
+        // declare 'box' variable (textarea element):
+        var box = document.getElementById('show');
+        // clear the 'box':
+        box.value = '';
+        // loop through the input elements:
+        for(var i=0; i<inputs.length; i++){
+            // append 'name' and 'value' to the 'box':
+            box.value += inputs[i].name + ': '+inputs[i].value+'\n';
+        }
+    }
+    function selectText(textField) {
+        textField.focus();
+        textField.select();
+    }
+    </script>

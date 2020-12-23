@@ -1,0 +1,119 @@
+<style>
+  .form-container {
+    background-color: #91B2FF;
+    max-width: 600px;
+    border-radius: 5px;
+    padding: 15px;
+  }
+  .result-container {
+    background-color: #91B2FF;
+    padding: 15px;
+    border-radius: 5px;
+    max-width: 600px;
+    word-break: break-all;
+    font-family: monospace;
+  }
+  .textbox {
+    width: 59%;
+    padding: 5px;
+  }
+  .textarea {
+    width: 90%;
+    padding: 5px;
+  }
+</style>
+
+<form id="generateCurliCallForm" class="form-container">
+
+  <div>
+    <label for="curliCall">LMS Curli</label>
+    <select id="curliCall">
+      <option selected value="AID">Ad Account Info</option>
+      <option value="CAMPAIGN">Campaign Info</option>
+      <option value="CGROUP">Campaign Group Info</option>
+      <option value="CREATIVE">Creative Info</option>
+      <option value="Segment">Segment Info</option>
+    </select>
+  </div>
+  <br>
+
+  <label for="input">Input:</label>
+  <input type="text" id="input" required class="textbox">
+  <br><br>
+
+  <button id="generateCurliCall">Generate URL</button>
+</form><br>
+
+<span>Generated Curli Call:</span>
+<div class="result-container">
+  <textarea rows=8 class="textarea" id="generatedCurliCall"></textarea>
+  <br><br>
+
+  <button id="copyCurliBtn">Copy to clipboard</button>
+</div>
+
+
+
+
+
+
+<script>
+  (function() {
+    document.getElementById("copyCurliBtn").addEventListener("click", function() {
+      let element = document.getElementById("generatedCurliCall");
+      const range = document.createRange();
+      range.selectNode(element);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand("copy");
+      window.getSelection().removeAllRanges();
+    });
+
+    document.getElementById("curliCall").addEventListener("change", function(evt) {
+      let curliCall = evt.target.value;
+      let requestDataInput = document.getElementById("requestData");
+      requestDataInput.disabled = httpMethod !== 'POST';
+    });
+
+    const form = document.getElementById('generateCurliCallForm');
+    form.onsubmit = function() {
+      const input = document.getElementById('input').value;
+
+
+      const curliCall = document.getElementById('curliCall').value;
+
+
+      // Set HTTP method
+      const curliCall = document.getElementById('curliCall').value;
+      curliCall += `-X ${httpMethod} `;
+
+      // Set Restli method, unless a Finder which seems to break for some reason
+      const restliMethod = document.getElementById('restliMethod').value;
+	  if (restliMethod !== 'finder') {
+		curliCall += `-H 'X-RestLi-Method: ${restliMethod}' `;
+	  }
+
+      // Set URL
+      const rootUrl = document.getElementById('rootUrl').value;
+      const resourceName = document.getElementById('resourceName').value;
+      const url = `"https://www.linkedin-ei.com/${rootUrl}/${resourceName}" `;
+      curliCall += url;
+
+      // Set default headers
+      curliCall += "-H 'X-RestLi-Protocol-Version: 2.0.0' -H 'X-Requested-With: XMLHttpRequest' ";
+
+
+      // Get CSRF token, li_at, and QD routing key
+      const rawCurl = document.getElementById('rawCurl').value;
+      const csrfToken = rawCurl.match(/ajax:\d+/);
+      const li_at = rawCurl.match(/li_at=[^;]*/);
+      const qdRoutingKey = document.getElementById('qdKey').value;
+      curliCall += `-H 'Csrf-Token: ${csrfToken}' `;
+      curliCall += `-H 'Cookie: JSESSIONID="${csrfToken}";${li_at};Set-IC-One-Way-QD-qd.routingKey=${qdRoutingKey}'`;
+
+
+      const resultEl = document.getElementById('generatedCurliCall').innerText = curliCall;
+      return false;
+    }
+  })();
+</script>
