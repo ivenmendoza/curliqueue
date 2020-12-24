@@ -1,13 +1,18 @@
-
-  <style>
+<style>
+  h3 {
+    margin-top: -5px;
+  }
   .form-container {
-    background-color: #91B2FF;
+    background-color: #0a66c2;
+    color: white;
     max-width: 600px;
     border-radius: 5px;
     padding: 15px;
+    font-family: monospace;
   }
   .result-container {
-    background-color: #91B2FF;
+    color: white;
+    background-color: #0a66c2;
     padding: 15px;
     border-radius: 5px;
     max-width: 600px;
@@ -20,7 +25,13 @@
   }
   .textarea {
     width: 90%;
-    padding: 5px;
+    padding: 15px;
+  }
+  .button {
+    font-family: monospace;
+  }
+  .dropdown {
+    font-family: monospace;
   }
 </style>
 
@@ -28,7 +39,7 @@
 
   <div>
     <label for="curliCall">LMS Curli</label>
-    <select id="curliCall">
+    <select id="curliCall" class="dropdown">
       <option selected value="AID">Ad Account Info</option>
       <option value="CAMPAIGN">Campaign Info</option>
       <option value="CGROUP">Campaign Group Info</option>
@@ -42,138 +53,52 @@
   <input type="text" id="input" required class="textbox">
   <br><br>
 
-  <button id="generateCurliCall" onclick="generate()">Generate URL</button>
+  <button type="submit" id="generateCurliCall" class="button">Generate URL</button>
 </form><br>
 
-<span>Generated Curli Call:</span>
+
 <div class="result-container">
+  <h3>Generated Curli Call:</h3>
   <textarea rows=8 class="textarea" id="generatedCurliCall"></textarea>
   <br><br>
 
-  <button id="copyCurliBtn">Copy to clipboard</button>
+  <button id="copyCurliBtn" class="button">Copy to clipboard</button>
+  <button id="clearForm" class="button">Reset</button>
 </div>
 
 <script>
-  ( function() {
   const curliForm = document.getElementById("curliForm")
-  const curliCallSelection = document.getElementById("curliCall")
   const generateButton = document.getElementById("generateCurliCall")
+  const copy = document.getElementById('copyCurliBtn');
+  
+  const curliCallSelection = document.getElementById("curliCall")
   const output = document.getElementById("generatedCurliCall")
+  const reset = document.getElementById('clearForm');
 
+  curliForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('input').value;
+    
+      
+      if (curliCallSelection.value == "AID") {
+        output.innerHTML = `curli -H 'Authenticate: X-RestLI SUPERUSER:urn:li:system:0' "d2://adAccountsV2/${input}" -X GET --fabric prod-ltx1 --dv-auth group:PTO_LMSTIER2`;
+        console.log(input);
+      }
+    })
+
+  copy.addEventListener('click', () => {
+    output.select();
+    output.setSelectionRange(0,99999)
+
+    document.execCommand("copy")
+
+    alert("Curli Copied")
   })
 
-  form.onsubmit = function() {
-      const input = document.getElementById('input').value;
+  reset.addEventListener('click', () => {
+    curliForm.reset()
+    output.innerHTML = ''
+  })
 
-
-      const curliCall = document.getElementById('curliCall').value;
-
-
-      // Set HTTP method
-      const curliCall = document.getElementById('curliCall').value;
-      curliCall += `-X ${httpMethod} `;
-
-      // Set Restli method, unless a Finder which seems to break for some reason
-      const restliMethod = document.getElementById('restliMethod').value;
-    if (restliMethod !== 'finder') {
-    curliCall += `-H 'X-RestLi-Method: ${restliMethod}' `;
-    }
   </script>
-
-
-  <!doctype html>
-
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Curli Queue</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
-
-  <style>
-  .form-container {
-    background-color: #91B2FF;
-    max-width: 600px;
-    border-radius: 5px;
-    padding: 15px;
-  }
-  .result-container {
-    background-color: #91B2FF;
-    padding: 15px;
-    border-radius: 5px;
-    max-width: 600px;
-    word-break: break-all;
-    font-family: monospace;
-  }
-  .textbox {
-    width: 59%;
-    padding: 5px;
-  }
-  .textarea {
-    width: 90%;
-    padding: 5px;
-  }
-</style>
-</head>
-
-<body>
-  <form id="curliForm" class="form-container">
-
-  <div>
-    <label for="curliCall">LMS Curli</label>
-    <select id="curliCall">
-      <option selected value="AID">Ad Account Info</option>
-      <option value="CAMPAIGN">Campaign Info</option>
-      <option value="CGROUP">Campaign Group Info</option>
-      <option value="CREATIVE">Creative Info</option>
-      <option value="Segment">Segment Info</option>
-    </select>
-  </div>
-  <br>
-
-  <label for="input">Input:</label>
-  <input type="text" id="input" required class="textbox">
-  <br><br>
-
-  <button id="generateCurliCall" onclick="generate()">Generate URL</button>
-</form><br>
-
-<span>Generated Curli Call:</span>
-<div class="result-container">
-  <textarea rows=8 class="textarea" id="generatedCurliCall"></textarea>
-  <br><br>
-
-  <button id="copyCurliBtn">Copy to clipboard</button>
-</div>
-
-
-<script>
-
-  const curliForm = document.getElementById("curliForm");
-  curliForm.addEventListener('load', function () {
-
-
-  const curliCallSelection = document.getElementById("curliCall");
-  const input = document.getElementById("input");
-  const generateButton = document.getElementById("generateCurliCall");
-  const output = document.getElementById("generatedCurliCall");
-
-  console.log(curliForm);
-  console.log(curliCallSelection);
-  console.log(input);
-  console.log(generateButton);
-  console.log(output);
-
-  let AIDreturn = `curli -H 'Authenticate: X-RestLI SUPERUSER:urn:li:system:0' "d2://adAccountsV2/${input.value}" -X GET --fabric prod-ltx1 --dv-auth group:PTO_LMSTIER2`;
-
-
-  function generate() {
-    if (curliCallSelection.value == 'AID') {
-      output.setAttribute(AIDreturn);
-      console.log(AIDreturn);
-    };
-};
-</script>
-</body>
-</html>
 
