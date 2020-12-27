@@ -1,0 +1,13 @@
+{
+    "manifest_version": 2,
+    "name": "CurliQ",
+    "description": "Curli Builder for LMS TES",
+    "version": "1.1",
+    "icons": {"128": "cQ_128.png"},
+    "browser_action": {
+        "default_icon": "cQ.png",
+        "default_popup": "script.html"
+    },
+    "permissions": ["activeTab"],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
