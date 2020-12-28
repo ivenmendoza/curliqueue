@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>curliQ</title>
   <script src="curliQ.js"></script>
+
+  <!-- CSS -->
   <style>
     html, body{
       width: 550px;
@@ -38,7 +40,7 @@
       font-family: monospace;
     }
     .textbox {
-      width: 59%;
+      width: 40%;
       padding: 3px;
     }
     .textarea {
@@ -56,19 +58,39 @@
       width: 200px;
     }
     .hidden {
-      visibility: hidden;
+      display: none;
     }
     .selection label{
       width: 100px;
       display: inline-block;
       text-align: left;
     }
+    .inline {
+      display: flex;
+      justify-content: space-between;
+      align-items: left;
+    }
+    .additional {
+      
+      margin: auto;
+      
+    }
+    .additional label {
+      width: 100px;
+      display: inline-block;
+    }
+    .additional .textbox {
+      margin-left: 2px;
+    }
   </style>
 </head>
+
+
 <body>
   <form id="curliForm" class="form-container">
- 
+ <!-- Dropdowns DIV for Call, Fabric, ACL Auth -->
     <div class="selection">
+      <!-- Dropwdown for Call -->
       <label for="curliCall">Call</label>
       <select id="curliCall" class="dropdown" required>
         <option selected value="">Select a call...</option>
@@ -121,33 +143,62 @@
         <!--By URL-->
         <optgroup label="By URL">
           <option value="SHORTLINK">Unwind LinkedIn Shortlink</option>
-        </optgroup>
-        
+        </optgroup> 
       </select><br><br>
-      <label for="fabric">Fabric</label>
-      <select id="fabric" class="dropdown">
-        <option selected value="--fabric prod-lsg1">lsg1</option>
-        <option value="--fabric prod-lor1">lor1</option>
-        <option value="--fabric prod-ltx1">ltx1</option>
-        <option value="--fabric prod-lva1">lva1</option>
-      </select><br><br>
-      <label for="auth">ACL Auth</label>
-      <select id="auth" class="dropdown">
-        <option selected value="--dv-auth SELF">SELF</option>
-        <option value="--dv-auth group:PTO_Payments_Premium">PTO_Payments_Premium</option>
-        <option value="--dv-auth group:PTO_LMSTIER2">PTO_LMSTIER2</option>
-        <option value="--dv-auth group:inaprodopsaccess">inaprodopsaccess</option>
-      </select>
+
+      <!-- Dropdown for Fabric -->
+      <div>
+        <label for="fabric">Fabric</label>
+        <select id="fabric" class="dropdown">
+          <option selected value="--fabric prod-lsg1">lsg1</option>
+          <option value="--fabric prod-lor1">lor1</option>
+          <option value="--fabric prod-ltx1">ltx1</option>
+          <option value="--fabric prod-lva1">lva1</option>
+        </select>
+      </div>
+      <br>
+
+      <!-- Dropdown for ACL Auth -->
+      <div>
+        <label for="auth">ACL Auth</label>
+        <select id="auth" class="dropdown">
+          <option selected value="--dv-auth SELF">SELF</option>
+          <option value="--dv-auth group:PTO_Payments_Premium">PTO_Payments_Premium</option>
+          <option value="--dv-auth group:PTO_LMSTIER2">PTO_LMSTIER2</option>
+          <option value="--dv-auth group:inaprodopsaccess">inaprodopsaccess</option>
+        </select>
+      </div>
+      <br>
+      <span id="inputPrompt" class='hidden'></span>
     </div>
     <br>
-    <span id="inputPrompt" class='hidden'></span>
-    <br>
-    <label for="input">Input:</label>
-    <input type="text" id="input" required class="textbox">
-  
-    <button type="submit" id="generateCurliCall" class="button">Generate URL</button>
+
+
+    <!-- Section for Input(s) -->
+    <section>
+      <div class="inline">
+        <label for="input" id="inputLabel">Input:</label>
+        <input type="text" id="input" required class="textbox">
+        <div>
+          <button type="submit" id="generateCurliCall" class="button">Generate URL</button>
+        </div>
+    </div>
+      <!-- DIV for Button -->
+      
+      <div class="additional hidden" id="additionalFields">
+        <br>
+        <label for="input">BalanceID:</label>
+        <input type="text" id="balanceID" required class="textbox">
+        <br><br>
+        <label for="input">CaseNumber:</label>
+        <input type="text" id="caseNum" required class="textbox">
+      </div>  
+    
+    </section>
   </form><br>
   
+
+  <!-- Generated Curli Call Result -->
   <div class="result-container" id="resultsBox">
     <p>Generated Curli Call:</p>
     <textarea rows=8 class="textarea" id="generatedCurliCall"></textarea>

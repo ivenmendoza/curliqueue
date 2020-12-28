@@ -8,8 +8,8 @@
     const reset = document.getElementById('clearForm')
     const fabric = document.getElementById('fabric')
     const auth = document.getElementById('auth')
+    const additionalFields = document.getElementById('additionalFields');
 
-    console.log(curliCallSelection);
     curliCallSelection.addEventListener('change', () => {
         const message = document.getElementById("inputPrompt");
         if (!curliCallSelection.value == '') {
@@ -59,13 +59,25 @@
         if (curliCallSelection.value == 'REVIEWLOG') {
             message.textContent = 'Please enter Review Item ID'
         }
-
+        if (curliCallSelection.value == 'CHECKBALANCE'){
+            message.textContent = 'Please enter Account ID'
+        }
+        if (curliCallSelection.value == 'REMOVEBALANCE'){
+            additionalFields.classList.remove('hidden');
+            message.textContent = 'Please enter Account ID, Balance ID, and Case Number'
+        } else {
+            additionalFields.classList.add('hidden');
+            document.getElementById('balanceID').required = false;
+            document.getElementById('caseNum').required = false;
+        }
     })
 
     // submit event
     curliForm.addEventListener('submit', (e) => {
         e.preventDefault()
         const input = document.getElementById('input').value;
+        const balanceID = document.getElementById('balanceID').value;
+        const caseNum = document.getElementById('caseNum').value;
 
         if (curliCallSelection.value == "AID") {
             output.innerHTML = `curli -H 'Authenticate: X-RestLI SUPERUSER:urn:li:system:0' "d2://adAccountsV2/${input}" -X GET ${fabric.value} ${auth.value}`;
@@ -127,11 +139,15 @@
         if (curliCallSelection.value == "REGION") {
             output.innerHTML = `curli --pretty-print "d2://geo/${input}" -X GET ${fabric.value} ${auth.value}`;
         }
-        if (curliCallSelection.value == "CHECKBALANCE") {
-            output.innerHTML = `curli --pretty-print "d2://accountBalances?owner=urn:li:sponsoredAccount:${insight}&q=owner" -X GET ${fabric.value} ${auth.value}`;
-        }
+       
         if (curliCallSelection.value == "SHORTLINK") {
             output.innerHTML = `curli --pretty-print "d2://shortlink/${input}" -get ${fabric.value} ${auth.value}`;
+        }
+        if (curliCallSelection.value == "CHECKBALANCE"){
+            output.innerHTML = `curli --pretty-print "d2://accountBalances?owner=urn:li:sponsoredAccount:${input}&q=owner" -X GET ${fabric.value} ${auth.value}`;
+        }
+        if (curliCallSelection.value == "REMOVEBALANCE"){
+            output.innerHTML = `curli  "d2://accountBalances?action=updateAccountBalance" -X POST -H 'X-RestLi-Method: action' -H 'X-RestLi-Protocol-Version: 2.0.0' --data '{"accountBalanceId":"${balanceID}", "amountToAdjust": {"amount": "-5", "currencyCode": "USD"}, "globalTxId": "PMTCS-16416-CASE:${caseNum}", "owner":"urn:li:sponsoredAccount:${input}", "txType": "revoke"}' ${fabric.value} ${auth.value}`
         }
     })
 
@@ -153,5 +169,6 @@
         output.innerHTML = ''
         document.getElementById("copyNotification").className = "hidden"
         document.getElementById('inputPrompt').className = 'hidden'
+        document.getElementById('additionalFields').classList.add('hidden');
 })
 }
