@@ -1,0 +1,77 @@
+
+html, body{
+    width: 550px;
+}
+form p {
+    margin-top: -5px;
+    font-weight: bold;
+    font-size: 15px;
+}
+form span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', Courier, monospace;
+}
+.form-container {
+    background-color: #e9e5df;
+    color: black;
+    max-width: 500px;
+    border-radius: 5px;
+    padding: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+}
+.result-container {
+    color: black;
+    background-color: #e9e5df;
+    padding: 15px;
+    border-radius: 5px;
+    max-width: 500px;
+    word-break: break-all;
+    font-family: monospace;
+    font-size: 15px;
+}
+.textbox {
+    width: 40%;
+    padding: 3px;
+}
+.textarea {
+    color: white;
+    width: 90%;
+    padding: 15px;
+    background-color: black;
+    font-family: courier;
+}
+.button {
+    font-family: monospace;
+}
+.dropdown {
+    font-family: monospace;
+    width: 200px;
+}
+.hidden {
+    display: none;
+}
+.selection label{
+    width: 100px;
+    display: inline-block;
+    text-align: left;
+}
+.inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: left;
+}
+.additional {
+    
+    margin: auto;
+    
+}
+.additional label {
+    width: 100px;
+    display: inline-block;
+}
+.additional .textbox {
+    margin-left: 2px;
+}
